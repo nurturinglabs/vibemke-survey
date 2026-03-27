@@ -32,9 +32,10 @@ export default function DashboardPage() {
   const handleUnlock = useCallback(
     async (pc: string) => {
       setPasscode(pc);
-      await fetchResponses(pc);
-      // If no error after fetch, we're in
-      setUnlocked(true);
+      const success = await fetchResponses(pc);
+      if (success) {
+        setUnlocked(true);
+      }
     },
     [fetchResponses]
   );

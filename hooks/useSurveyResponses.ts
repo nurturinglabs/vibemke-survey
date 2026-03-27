@@ -9,7 +9,7 @@ export function useSurveyResponses() {
   const [error, setError] = useState("");
   const [selectedMeetup, setSelectedMeetup] = useState("All Meetups");
 
-  const fetchResponses = useCallback(async (passcode: string) => {
+  const fetchResponses = useCallback(async (passcode: string): Promise<boolean> => {
     setLoading(true);
     setError("");
     try {
@@ -23,9 +23,11 @@ export function useSurveyResponses() {
         throw new Error(body.error || "Failed to fetch");
       }
       const { data } = await res.json();
-      setResponses(data);
+      setResponses(data || []);
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch");
+      return false;
     } finally {
       setLoading(false);
     }
