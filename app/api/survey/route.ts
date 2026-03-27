@@ -3,6 +3,12 @@ import { getSupabase } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+    if (!url) {
+      console.error("Missing Supabase URL env var");
+      return NextResponse.json({ error: "Server misconfigured" }, { status: 500 });
+    }
+
     const body = await req.json();
 
     const { error } = await getSupabase().from("survey_responses").insert([
